@@ -1,0 +1,23 @@
+{
+  "name": "@marijn/testtool",
+  "version": "0.1.0",
+  "description": "Helper package to run Mocha tests",
+  "author": {
+    "name": "Marijn Haverbeke",
+    "email": "marijnh@gmail.com",
+    "url": "http://marijnhaverbeke.nl"
+  },
+  "main": "./src/testtool.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marijnh/testtool.git"
+  },
+  "dependencies": {
+    "mocha": "^10.0.0",
+    "ist": "^1.1.7",
+    "esmoduleserve": "^0.2.0",
+    "selenium-webdriver": "^4.0.0-beta.3",
+    "serve-static": "^1.14.1"
+  }
+}
