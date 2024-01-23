@@ -61,7 +61,7 @@ exports.runBrowserTests = async function({files, browser = "chrome", server, gre
   const {Builder, By, until} = require("selenium-webdriver")
   const webdriver = require("selenium-webdriver/" + browser)
 
-  let builder = new Builder().forBrowser(browser).setChromeOptions(new webdriver.Options().headless())
+  let builder = new Builder().forBrowser(browser).setChromeOptions(new webdriver.Options().addArguments('--headless=new'))
   let driver = await builder.build()
   try {
     let port = server.address().port
