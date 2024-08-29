@@ -73,14 +73,15 @@ exports.runBrowserTests = async function({files, browser = "chrome", server, gre
   }
 }
 
-exports.createTestServer = function({files, root, port = undefined, selenium = false}) {
-  let moduleserver = new (require("esmoduleserve/moduleserver"))({root, maxDepth: 2})
+exports.createTestServer = function(options) {
+  let {files, root, port = undefined, selenium = false} = options
+  let moduleserver = new (require("esmoduleserve/moduleserver"))({root: root, maxDepth: 2})
   let serveStatic = require("serve-static")(root)
   return require("http").createServer((req, resp) => {
     let {pathname} = url.parse(req.url), m
     if (pathname == "/") {
       resp.writeHead(200, {"content-type": "text/html; charset=utf-8"})
-      resp.end(exports.testHTML(files.map(f => path.relative(root, f)), selenium))
+      resp.end(exports.testHTML(files.map(f => path.relative(root, f)), options))
     } else if (m = /^.*\/mocha(\.\w+)$/.exec(pathname)) {
       let base = require.resolve("mocha/mocha")
       let content = fs.readFileSync(base.replace(/\.\w+$/, m[1]), "utf8")
@@ -97,20 +98,19 @@ exports.createTestServer = function({files, root, port = undefined, selenium = f
   }).listen(port)
 }
 
-exports.testHTML = function(testFiles, selenium) {
+exports.testHTML = function(testFiles, options = {}) {
+  if (typeof options == "boolean") options = {selenium: options} // Old calling style
+  let {selenium = false, mochaPath = "", html = `<title>browser tests</title>
+<h1>browser tests</h1>
+<div id="workspace" style="opacity: 0; position: fixed; top: 0; left: 0; width: 20em;"></div>`} = options
+
   return `<!doctype html>
 <meta charset=utf8>
-<title>CodeMirror view tests</title>
-
-<link rel=stylesheet href="mocha.css">
-
-<h1>CodeMirror view tests</h1>
-
-<div id="workspace" style="opacity: 0; position: fixed; top: 0; left: 0; width: 20em;"></div>
+<link rel=stylesheet href="${mochaPath}mocha.css">
+${html}
 
 <div id=mocha></div>
-
-<script src="mocha.js"></script>
+<script src="${mochaPath}mocha.js"></script>
 <script>
 let output = []
 mocha.setup({
