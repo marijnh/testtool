@@ -1,3 +1,5 @@
+**This repository has been moved to https://code.haverbeke.berlin/marijn/testtool**
+
 # @marijn/testtool
 
 Utility for running collections of Mocha test files that contain both
